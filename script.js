@@ -1,84 +1,77 @@
 const canvas = document.getElementById("heart");
 const ctx = canvas.getContext("2d");
 
-let W,H;
-let particles=[];
+let W, H;
+let particles = [];
 
-function resize(){
-
-    W=canvas.width=window.innerWidth;
-    H=canvas.height=window.innerHeight;
+function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
 
     createHeart();
 }
 
-function createHeart(){
+function createHeart() {
 
-    particles=[];
+    particles = [];
 
-    /*
-      BIG HEART
-    */
+    const scale = Math.min(W, H) * 0.0205;
 
-    const scale=Math.min(W,H)*0.0205;
-
-    const cx=W/2;
-    const cy=H/2+25;
+    const cx = W / 2;
+    const cy = H / 2 + 20;
 
     /*
-      MANY SMALL PARTICLES
+      CREATE THE HEART
     */
 
-    for(let t=0;t<Math.PI*2;t+=0.006){
+    for (let t = 0; t < Math.PI * 2; t += 0.008) {
 
-        const x=
-            16*Math.pow(Math.sin(t),3);
+        const x =
+            16 * Math.pow(Math.sin(t), 3);
 
-        const y=
-            13*Math.cos(t)
-            -5*Math.cos(2*t)
-            -2*Math.cos(3*t)
-            -Math.cos(4*t);
+        const y =
+            13 * Math.cos(t)
+            - 5 * Math.cos(2 * t)
+            - 2 * Math.cos(3 * t)
+            - Math.cos(4 * t);
 
         /*
-          THICK HEART
-          Several particles around
-          the main curve.
+          THICKNESS
         */
 
-        for(let j=0;j<3;j++){
+        for (let j = 0; j < 3; j++) {
 
-            const thickness=
-                (Math.random()-.5)*28;
+            const thickness = 25;
+
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * thickness;
 
             particles.push({
 
                 x:
-                    cx+
-                    x*scale+
-                    thickness,
+                    cx +
+                    x * scale +
+                    Math.cos(angle) * distance,
 
                 y:
-                    cy-
-                    y*scale+
-                    thickness,
+                    cy -
+                    y * scale +
+                    Math.sin(angle) * distance,
 
                 size:
-                    .6+
-                    Math.random()*1.5,
+                    0.7 + Math.random() * 1.5,
 
                 /*
-                  LEFT → RIGHT position
+                  Position around heart
                 */
 
-                order:
-                    (x+16)/32,
+                order: (x + 16) / 32,
 
                 random:
-                    Math.random()*Math.PI*2,
+                    Math.random() * Math.PI * 2,
 
-                offset:
-                    Math.random()*1000
+                speed:
+                    0.5 + Math.random()
 
             });
         }
@@ -87,130 +80,168 @@ function createHeart(){
 
 
 /*
-  DRAW
+  ANIMATION
 */
 
-function animate(time){
+function animate(time) {
 
-    ctx.clearRect(0,0,W,H);
+    ctx.clearRect(0, 0, W, H);
 
-    const seconds=time/1000;
-
-    /*
-      BIG → SMALL → BIG
-
-      Gentle continuous breathing.
-    */
-
-    const pulse=
-        1+
-        Math.sin(seconds*1.5)*0.055;
-
+    const seconds = time / 1000;
 
     /*
-      LEFT → RIGHT → LEFT
+    ========================================
+    HEART BREATHING
 
-      This value continuously travels
-      across the heart.
+    0.82 = small
+    1.18 = big
+
+    This is intentionally exaggerated
+    so you can clearly see it on mobile.
+    ========================================
     */
 
-    const wave=
-        (Math.sin(seconds*1.3)+1)/2;
+    const breathing =
+        1 +
+        Math.sin(seconds * 1.4) * 0.18;
 
 
-    for(const p of particles){
+    /*
+    ========================================
+    TRAVELING WAVE
 
-        /*
-          Distance from moving wave
-        */
+    LEFT → RIGHT → LEFT
+    ========================================
+    */
 
-        let distance=
-            Math.abs(p.order-wave);
+    const wave =
+        (Math.sin(seconds * 1.8) + 1) / 2;
 
-        /*
-          Wrap-around so the animation
-          feels continuous.
-        */
 
-        distance=Math.min(
-            distance,
-            1-distance
-        );
+    for (const p of particles) {
 
         /*
-          Particles near the moving wave
-          become brighter/larger.
+        ------------------------------------
+        HEART SIZE
+        ------------------------------------
         */
 
-        const glow=
-            Math.max(
-                0,
-                1-distance*7
+        const x =
+            W / 2 +
+            (p.x - W / 2) * breathing;
+
+        const y =
+            H / 2 +
+            (p.y - H / 2) * breathing;
+
+
+        /*
+        ------------------------------------
+        FLOATING MOTION
+        ------------------------------------
+        */
+
+        const floatX =
+            Math.sin(
+                seconds * p.speed +
+                p.random
+            ) * 1.2;
+
+        const floatY =
+            Math.cos(
+                seconds * p.speed * 0.8 +
+                p.random
+            ) * 1.2;
+
+
+        /*
+        ------------------------------------
+        MOVING LIGHT WAVE
+        ------------------------------------
+        */
+
+        let distance =
+            Math.abs(p.order - wave);
+
+        /*
+          Make the wave wrap around
+        */
+
+        distance =
+            Math.min(
+                distance,
+                1 - distance
             );
 
         /*
-          Tiny natural movement
+          Strong glowing section
         */
 
-        const movement=
-            Math.sin(
-                seconds*2+
-                p.random+
-                p.offset
-            )*.7;
-
-        const x=
-            W/2+
-            (p.x-W/2)*pulse+
-            movement;
-
-        const y=
-            H/2+
-            (p.y-H/2)*pulse+
-            movement*.5;
-
-        const size=
-            p.size+
-            glow*1.5;
-
-        const alpha=
-            .45+
-            glow*.55;
+        const glow =
+            Math.max(
+                0,
+                1 - distance * 8
+            );
 
 
         /*
-          PARTICLE
+        ------------------------------------
+        PARTICLE SIZE
+        ------------------------------------
+        */
+
+        const size =
+            p.size +
+            glow * 2.2;
+
+
+        /*
+        ------------------------------------
+        BRIGHTNESS
+        ------------------------------------
+        */
+
+        const alpha =
+            0.45 +
+            glow * 0.55;
+
+
+        /*
+        ------------------------------------
+        DRAW
+        ------------------------------------
         */
 
         ctx.beginPath();
 
         ctx.arc(
-            x,
-            y,
+            x + floatX,
+            y + floatY,
             size,
             0,
-            Math.PI*2
+            Math.PI * 2
         );
 
-        ctx.fillStyle=
+        ctx.fillStyle =
             `rgba(255,255,255,${alpha})`;
 
-        /*
-          WHITE GLOW
-        */
+        ctx.shadowColor =
+            "rgba(255,255,255,0.95)";
 
-        ctx.shadowColor=
-            "rgba(255,255,255,.9)";
-
-        ctx.shadowBlur=
-            3+glow*8;
+        ctx.shadowBlur =
+            3 + glow * 10;
 
         ctx.fill();
     }
 
+
     requestAnimationFrame(animate);
 }
 
+
+/*
+  START
+*/
 
 window.addEventListener(
     "resize",
