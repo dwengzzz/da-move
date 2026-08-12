@@ -1,171 +1,87 @@
-document.addEventListener("DOMContentLoaded",()=>{
+const heart = document.getElementById("heart");
 
-const stems=document.querySelectorAll(".stem");
-const leaves=document.querySelectorAll(".leaves span");
-const flowers=document.querySelectorAll(".flower");
-const particles=document.querySelector(".particles");
+const flowers = [];
 
-/* PARTICLES */
+/* HEART EQUATION */
 
-for(let i=0;i<35;i++){
+for(let t = 0; t < Math.PI * 2; t += 0.075){
 
-const p=document.createElement("span");
+    const x = 16 * Math.pow(Math.sin(t),3);
 
-p.style.left=Math.random()*100+"%";
-p.style.top=Math.random()*100+"%";
-p.style.animationDelay=Math.random()*7+"s";
+    const y =
+        13 * Math.cos(t)
+        - 5 * Math.cos(2*t)
+        - 2 * Math.cos(3*t)
+        - Math.cos(4*t);
 
-particles.appendChild(p);
-
+    flowers.push({
+        x:x * 16 + 300,
+        y:-y * 16 + 270
+    });
 }
 
 
-/* BUILD EACH CARNATION */
+/* FILL THE HEART */
 
-flowers.forEach((flower)=>{
+for(let x = 80; x < 520; x += 30){
 
-const svg=document.createElementNS(
-"http://www.w3.org/2000/svg","svg"
-);
+    for(let y = 70; y < 480; y += 30){
 
-svg.setAttribute("viewBox","0 0 200 200");
+        const nx = (x - 300) / 16;
+        const ny = -(y - 270) / 16;
 
-const defs=document.createElementNS(
-"http://www.w3.org/2000/svg","defs"
-);
+        const value =
+            Math.pow(nx / 16,2) +
+            Math.pow((ny - 3) / 13,2);
 
-defs.innerHTML=`
-<filter id="blur">
-<feGaussianBlur stdDeviation=".18"/>
-</filter>`;
+        /* heart equation */
 
-svg.appendChild(defs);
+        const inside =
+            Math.pow(nx,2) +
+            Math.pow(ny,2) <
+            256 &&
+            ny < 13;
 
+        if(inside){
 
-/* OUTER PETALS */
+            const flower = document.createElement("div");
 
-for(let i=0;i<22;i++){
+            flower.className="flower";
 
-const p=document.createElementNS(
-"http://www.w3.org/2000/svg","ellipse"
-);
+            /* tiny natural randomness */
 
-let a=i*(360/22);
-let r=38;
+            const px =
+                x + (Math.random()*12-6);
 
-let x=100+Math.cos(a*Math.PI/180)*r;
-let y=100+Math.sin(a*Math.PI/180)*r;
+            const py =
+                y + (Math.random()*12-6);
 
-p.setAttribute("cx",x);
-p.setAttribute("cy",y);
-p.setAttribute("rx",28+Math.random()*6);
-p.setAttribute("ry",48+Math.random()*9);
+            flower.style.left=px+"px";
+            flower.style.top=py+"px";
 
-p.setAttribute(
-"transform",
-`rotate(${a+Math.random()*12-6} ${x} ${y})`
-);
+            /*
+            LEFT → RIGHT ANIMATION
+            */
 
-p.classList.add("petal");
+            const delay =
+                (x / 520) * 5 +
+                Math.random() * .7;
 
-if(i%7===0)p.classList.add("pale");
-else if(i%4===0)p.classList.add("light");
-else if(i%5===0)p.classList.add("dark");
+            flower.style.animationDelay=delay+"s";
 
-svg.appendChild(p);
+            /* petals */
+
+            for(let i=0;i<8;i++){
+
+                const petal =
+                    document.createElement("span");
+
+                petal.className="petal";
+
+                flower.appendChild(petal);
+            }
+
+            heart.appendChild(flower);
+        }
+    }
 }
-
-
-/* INNER RUFFLED PETALS */
-
-for(let i=0;i<16;i++){
-
-const p=document.createElementNS(
-"http://www.w3.org/2000/svg","ellipse"
-);
-
-let a=i*(360/16);
-let r=20;
-
-let x=100+Math.cos(a*Math.PI/180)*r;
-let y=100+Math.sin(a*Math.PI/180)*r;
-
-p.setAttribute("cx",x);
-p.setAttribute("cy",y);
-p.setAttribute("rx",18);
-p.setAttribute("ry",35+Math.random()*8);
-
-p.setAttribute(
-"transform",
-`rotate(${a+Math.random()*15-7} ${x} ${y})`
-);
-
-p.classList.add("petal","light");
-
-svg.appendChild(p);
-}
-
-
-/* CENTER */
-
-const center=document.createElementNS(
-"http://www.w3.org/2000/svg","circle"
-);
-
-center.setAttribute("cx","100");
-center.setAttribute("cy","100");
-center.setAttribute("r","22");
-center.classList.add("center");
-
-svg.appendChild(center);
-
-
-const dot=document.createElementNS(
-"http://www.w3.org/2000/svg","circle"
-);
-
-dot.setAttribute("cx","100");
-dot.setAttribute("cy","100");
-dot.setAttribute("r","8");
-dot.classList.add("center-dot");
-
-svg.appendChild(dot);
-
-flower.appendChild(svg);
-
-});
-
-
-/* STEMS */
-
-stems.forEach((stem,i)=>{
-
-setTimeout(()=>{
-stem.classList.add("show");
-},3000+i*650);
-
-});
-
-
-/* LEAVES */
-
-leaves.forEach((leaf,i)=>{
-
-setTimeout(()=>{
-leaf.classList.add("show");
-},7200+i*450);
-
-});
-
-
-/* FLOWERS */
-
-flowers.forEach((flower,i)=>{
-
-setTimeout(()=>{
-flower.classList.add("show");
-},11500+i*1300);
-
-});
-
-});
