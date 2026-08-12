@@ -1,87 +1,243 @@
-const heart = document.getElementById("heart");
+const canvas = document.getElementById("heart");
+const ctx = canvas.getContext("2d");
 
-const flowers = [];
+let W,H;
+let flowers=[];
+let start=performance.now();
 
-/* HEART EQUATION */
+function resize(){
 
-for(let t = 0; t < Math.PI * 2; t += 0.075){
+    const box=canvas.getBoundingClientRect();
 
-    const x = 16 * Math.pow(Math.sin(t),3);
+    const dpr=Math.min(window.devicePixelRatio||1,1.5);
 
-    const y =
-        13 * Math.cos(t)
-        - 5 * Math.cos(2*t)
-        - 2 * Math.cos(3*t)
-        - Math.cos(4*t);
+    W=box.width;
+    H=box.height;
 
-    flowers.push({
-        x:x * 16 + 300,
-        y:-y * 16 + 270
-    });
+    canvas.width=W*dpr;
+    canvas.height=H*dpr;
+
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+
+    createHeart();
 }
 
+function insideHeart(x,y){
 
-/* FILL THE HEART */
+    const X=x/250;
+    const Y=y/230;
 
-for(let x = 80; x < 520; x += 30){
+    return Math.pow(X*X+Y*Y-1,3)
+        -X*X*Math.pow(Y,3)<=0;
+}
 
-    for(let y = 70; y < 480; y += 30){
+function createHeart(){
 
-        const nx = (x - 300) / 16;
-        const ny = -(y - 270) / 16;
+    flowers=[];
 
-        const value =
-            Math.pow(nx / 16,2) +
-            Math.pow((ny - 3) / 13,2);
+    const scale=Math.min(W/620,H/600);
 
-        /* heart equation */
+    const cx=W/2;
+    const cy=H/2+20*scale;
 
-        const inside =
-            Math.pow(nx,2) +
-            Math.pow(ny,2) <
-            256 &&
-            ny < 13;
+    const spacing=21*scale;
 
-        if(inside){
+    for(let y=-250;y<=250;y+=spacing){
 
-            const flower = document.createElement("div");
+        for(let x=-300;x<=300;x+=spacing){
 
-            flower.className="flower";
+            let px=x+(Math.random()-0.5)*7*scale;
+            let py=y+(Math.random()-0.5)*7*scale;
 
-            /* tiny natural randomness */
+            if(insideHeart(px,py)){
 
-            const px =
-                x + (Math.random()*12-6);
+                flowers.push({
+                    x:cx+px*scale,
+                    y:cy-py*scale,
 
-            const py =
-                y + (Math.random()*12-6);
+                    size:(11+Math.random()*4)*scale,
 
-            flower.style.left=px+"px";
-            flower.style.top=py+"px";
+                    delay:
+                        (px+300)/600*4.5+
+                        Math.random()*0.6,
 
-            /*
-            LEFT → RIGHT ANIMATION
-            */
+                    rotation:Math.random()*Math.PI*2,
 
-            const delay =
-                (x / 520) * 5 +
-                Math.random() * .7;
-
-            flower.style.animationDelay=delay+"s";
-
-            /* petals */
-
-            for(let i=0;i<8;i++){
-
-                const petal =
-                    document.createElement("span");
-
-                petal.className="petal";
-
-                flower.appendChild(petal);
+                    sway:Math.random()*Math.PI*2
+                });
             }
-
-            heart.appendChild(flower);
         }
     }
+
+    /*
+      Slightly fewer flowers on smaller screens
+      so the animation stays smooth.
+    */
+
+    if(flowers.length>420)
+        flowers=flowers.slice(0,420);
 }
+
+function drawFlower(f,t){
+
+    const progress=Math.max(
+        0,
+        Math.min(1,(t-f.delay*1000)/900)
+    );
+
+    if(progress<=0)return;
+
+    const ease=1-Math.pow(1-progress,3);
+
+    const sway=
+        Math.sin(t/1400+f.sway)*0.8;
+
+    const size=f.size*ease;
+
+    ctx.save();
+
+    ctx.translate(f.x+sway,f.y);
+    ctx.rotate(f.rotation);
+
+    ctx.globalAlpha=ease;
+
+    /*
+      Soft flower shadow
+    */
+
+    ctx.shadowColor="rgba(0,0,0,.25)";
+    ctx.shadowBlur=3;
+    ctx.shadowOffsetY=1;
+
+    /*
+      Carnation petals
+    */
+
+    for(let i=0;i<8;i++){
+
+        const a=i*Math.PI/4;
+
+        ctx.save();
+
+        ctx.rotate(a);
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            0,
+            -size*.42,
+            size*.42,
+            size*.62,
+            0,
+            0,
+            Math.PI*2
+        );
+
+        const g=ctx.createRadialGradient(
+            0,-size*.45,1,
+            0,-size*.45,size
+        );
+
+        g.addColorStop(0,"#ffffff");
+        g.addColorStop(.55,"#f5f5f5");
+        g.addColorStop(1,"#d8d8d8");
+
+        ctx.fillStyle=g;
+        ctx.fill();
+
+        /*
+          soft ruffle line
+        */
+
+        ctx.strokeStyle="rgba(190,190,190,.35)";
+        ctx.lineWidth=.6;
+
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+    /*
+      Inner petals
+    */
+
+    for(let i=0;i<6;i++){
+
+        const a=i*Math.PI/3;
+
+        ctx.save();
+
+        ctx.rotate(a);
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            0,
+            -size*.20,
+            size*.28,
+            size*.42,
+            0,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fillStyle="#eeeeee";
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    /*
+      Carnation center
+    */
+
+    ctx.shadowBlur=0;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        size*.16,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle="#d6d6d6";
+    ctx.fill();
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        size*.07,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle="#bdbdbd";
+    ctx.fill();
+
+    ctx.restore();
+}
+
+function animate(t){
+
+    ctx.clearRect(0,0,W,H);
+
+    /*
+      Draw from left to right.
+    */
+
+    for(const f of flowers)
+        drawFlower(f,t-start);
+
+    requestAnimationFrame(animate);
+}
+
+window.addEventListener("resize",resize);
+
+resize();
+
+requestAnimationFrame(animate);
