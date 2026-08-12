@@ -1,173 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>A Bouquet For You 🌸</title>
-
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Bouquet For You 🌸</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <main class="scene">
+<main class="scene">
 
-        <!-- Background atmosphere -->
-        <div class="background-glow glow-one"></div>
-        <div class="background-glow glow-two"></div>
+<div class="intro">
+<p>A little something...</p>
+<h1>Just for you</h1>
+</div>
 
-        <!-- Opening text -->
-        <div class="intro">
+<div class="particles"></div>
 
-            <p class="eyebrow">
-                A little something...
-            </p>
+<div class="bouquet-stage">
+<div class="bouquet">
 
-            <h1>
-                Just for you
-            </h1>
+<svg class="stems" viewBox="0 0 500 550">
+<path class="stem" d="M250 540C245 430 240 290 245 135"/>
+<path class="stem" d="M250 540C220 430 190 290 145 175"/>
+<path class="stem" d="M250 540C280 420 320 290 355 175"/>
+<path class="stem" d="M250 540C230 410 225 290 205 205"/>
+<path class="stem" d="M250 540C270 420 275 300 295 200"/>
+<path class="stem" d="M250 540C245 420 260 320 260 220"/>
+</svg>
 
-            <div class="intro-line"></div>
+<div class="leaves">
+<span></span><span></span><span></span><span></span>
+<span></span><span></span><span></span><span></span>
+</div>
 
-        </div>
+<!-- CARNATIONS -->
 
+<div class="flower f1"></div>
+<div class="flower f2"></div>
+<div class="flower f3"></div>
+<div class="flower f4"></div>
+<div class="flower f5"></div>
+<div class="flower f6"></div>
 
-        <!-- Floating particles -->
-        <div
-            class="particles"
-            aria-hidden="true">
-        </div>
+</div>
+</div>
 
+</main>
 
-        <!-- ==================================================
-             BOUQUET
-        =================================================== -->
-
-        <section
-            class="bouquet-stage"
-            aria-label="A blooming carnation bouquet">
-
-            <div class="bouquet">
-
-
-                <!-- ==================================================
-                     STEMS
-                =================================================== -->
-
-                <svg
-                    class="stems"
-                    viewBox="0 0 500 550"
-                    aria-hidden="true">
-
-                    <path
-                        class="stem stem-one"
-                        d="M250 540 C245 430 240 290 245 135"
-                    />
-
-                    <path
-                        class="stem stem-two"
-                        d="M250 540 C220 430 190 290 145 175"
-                    />
-
-                    <path
-                        class="stem stem-three"
-                        d="M250 540 C280 420 320 290 355 175"
-                    />
-
-                    <path
-                        class="stem stem-four"
-                        d="M250 540 C230 410 225 290 205 205"
-                    />
-
-                    <path
-                        class="stem stem-five"
-                        d="M250 540 C270 420 275 300 295 200"
-                    />
-
-                    <path
-                        class="stem stem-six"
-                        d="M250 540 C245 420 260 320 260 220"
-                    />
-
-                </svg>
-
-
-                <!-- ==================================================
-                     LEAVES
-                =================================================== -->
-
-                <div class="leaves">
-
-                    <span class="leaf leaf-one"></span>
-                    <span class="leaf leaf-two"></span>
-                    <span class="leaf leaf-three"></span>
-                    <span class="leaf leaf-four"></span>
-                    <span class="leaf leaf-five"></span>
-                    <span class="leaf leaf-six"></span>
-                    <span class="leaf leaf-seven"></span>
-                    <span class="leaf leaf-eight"></span>
-
-                </div>
-
-
-                <!-- ==================================================
-                     FLOWER 1
-                =================================================== -->
-
-                <div class="flower flower-one">
-
-                    <div class="bud"></div>
-
-                    <svg
-                        class="carnation"
-                        viewBox="0 0 200 200"
-                        aria-hidden="true">
-
-                        <g class="petals">
-
-                            <ellipse
-                                cx="100"
-                                cy="42"
-                                rx="38"
-                                ry="65"
-                            />
-
-                            <ellipse
-                                cx="145"
-                                cy="65"
-                                rx="38"
-                                ry="65"
-                                transform="rotate(45 145 65)"
-                            />
-
-                            <ellipse
-                                cx="158"
-                                cy="105"
-                                rx="38"
-                                ry="65"
-                                transform="rotate(90 158 105)"
-                            />
-
-                            <ellipse
-                                cx="137"
-                                cy="145"
-                                rx="38"
-                                ry="65"
-                                transform="rotate(135 137 145)"
-                            />
-
-                            <ellipse
-                                cx="100"
-                                cy="158"
-                                rx="38"
-                                ry="65"
-                                transform="rotate(180 100 158)"
-                            />
-
-        
+<script src="script.js"></script>
+</body>
+</html>
