@@ -1,166 +1,218 @@
 *{box-sizing:border-box;margin:0;padding:0}
 
 body{
-overflow:hidden;
-background:radial-gradient(circle,#351f25,#100b10 70%);
-color:#f8e8e8;
-font-family:Georgia,serif
+    overflow:hidden;
+    background:
+    radial-gradient(circle at 50% 40%,#321c22,#120b10 70%);
+    font-family:Georgia,serif;
+    color:#f8e9e8;
 }
 
 .scene{
-width:100vw;
-height:100vh;
-overflow:hidden;
-position:relative
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    position:relative;
 }
 
+/* MESSAGE */
+
 .intro{
-position:absolute;
-z-index:5;
-top:8%;
-left:50%;
-transform:translateX(-50%);
-text-align:center;
-opacity:0;
-animation:intro 3s forwards
+    position:absolute;
+    z-index:20;
+    top:7%;
+    left:50%;
+    width:90%;
+    text-align:center;
+    transform:translateX(-50%) translateY(15px);
+    opacity:0;
+    animation:intro 3s ease 1s forwards;
 }
 
 .intro p{
-font:11px Arial;
-letter-spacing:5px;
-text-transform:uppercase;
-color:#c8b0b0;
-margin-bottom:12px
+    font:11px Arial,sans-serif;
+    letter-spacing:5px;
+    text-transform:uppercase;
+    color:#c9b1b3;
+    margin-bottom:12px;
 }
 
 .intro h1{
-font-size:clamp(30px,6vw,50px);
-font-weight:400;
-white-space:nowrap
+    font-size:clamp(22px,5vw,42px);
+    font-weight:400;
+    line-height:1.25;
+    text-shadow:0 2px 15px #000;
 }
 
+/* BOUQUET */
+
 .bouquet-stage{
-position:absolute;
-width:500px;
-height:650px;
-left:50%;
-bottom:-5px;
-transform:translateX(-50%)
+    position:absolute;
+    width:500px;
+    height:650px;
+    left:50%;
+    bottom:-5px;
+    transform:translateX(-50%);
 }
 
 .bouquet{
-width:100%;
-height:100%;
-position:relative
+    position:relative;
+    width:100%;
+    height:100%;
 }
 
+/* STEMS */
+
 .stems{
-position:absolute;
-width:500px;
-height:550px;
-bottom:25px;
-left:0
+    position:absolute;
+    width:500px;
+    height:550px;
+    left:0;
+    bottom:25px;
 }
 
 .stem{
-fill:none;
-stroke:#41643d;
-stroke-width:7;
-stroke-linecap:round;
-stroke-dasharray:600;
-stroke-dashoffset:600;
-opacity:0;
-transition:4s ease
+    fill:none;
+    stroke:#3d633b;
+    stroke-width:7;
+    stroke-linecap:round;
+    stroke-dasharray:600;
+    stroke-dashoffset:600;
+    opacity:0;
+    transition:4s cubic-bezier(.4,0,.2,1);
+    filter:drop-shadow(1px 2px 2px #0008);
 }
 
 .stem.show{
-opacity:1;
-stroke-dashoffset:0
+    opacity:1;
+    stroke-dashoffset:0;
 }
 
+/* LEAVES */
+
 .leaves span{
-position:absolute;
-width:85px;
-height:25px;
-background:linear-gradient(135deg,#66844f,#29462d);
-border-radius:100% 0;
-opacity:0;
-transform:scale(0);
-transition:1.5s ease
+    position:absolute;
+    width:90px;
+    height:27px;
+    border-radius:100% 0 100% 0;
+    background:linear-gradient(135deg,#65874f,#28452c);
+    box-shadow:inset -8px -5px 10px #172b1a66;
+    opacity:0;
+    transform:scale(0);
+    transition:1.5s ease;
 }
 
 .leaves span.show{
-opacity:1;
-transform:scale(1)
+    opacity:1;
+    transform:scale(1);
 }
 
-.leaves span:nth-child(1){left:18%;top:55%;transform-origin:left;rotate:-28deg}
-.leaves span:nth-child(2){left:25%;top:47%;rotate:25deg}
+.leaves span:nth-child(1){left:17%;top:55%;rotate:-30deg}
+.leaves span:nth-child(2){left:24%;top:47%;rotate:25deg}
 .leaves span:nth-child(3){left:35%;top:58%;rotate:-35deg}
-.leaves span:nth-child(4){right:16%;top:55%;rotate:205deg}
-.leaves span:nth-child(5){right:24%;top:47%;rotate:160deg}
-.leaves span:nth-child(6){right:34%;top:58%;rotate:205deg}
+.leaves span:nth-child(4){right:15%;top:55%;rotate:205deg}
+.leaves span:nth-child(5){right:23%;top:47%;rotate:160deg}
+.leaves span:nth-child(6){right:33%;top:58%;rotate:205deg}
 .leaves span:nth-child(7){left:39%;top:64%;rotate:-15deg}
 .leaves span:nth-child(8){right:39%;top:64%;rotate:195deg}
 
+/* FLOWERS */
+
 .flower{
-position:absolute;
-width:145px;
-height:145px;
-border-radius:50%;
-opacity:0;
-transform:translate(-50%,80px) scale(.1);
-transition:4s cubic-bezier(.16,1,.3,1);
-background:
-radial-gradient(circle,#ffd1d2 0 8%,#d95767 9% 18%,transparent 19%),
-repeating-radial-gradient(
-circle,
-#e0717b 0 10px,
-#bd4858 11px 17px,
-#e7838b 18px 25px
-);
-box-shadow:
-0 5px 15px #0008,
-inset 0 0 15px #fff4
+    position:absolute;
+    width:155px;
+    height:155px;
+    opacity:0;
+    transform:translate(-50%,80px) scale(.15);
+    transition:4s cubic-bezier(.16,1,.3,1);
+    filter:drop-shadow(0 8px 8px #0008);
 }
 
 .flower.show{
-opacity:1;
-transform:translate(-50%,0) scale(1);
-animation:sway 6s ease-in-out infinite
+    opacity:1;
+    transform:translate(-50%,0) scale(1);
+    animation:sway 7s ease-in-out infinite;
 }
 
-.f1{left:50%;top:5%}
-.f2{left:29%;top:16%}
-.f3{left:71%;top:16%}
-.f4{left:38%;top:29%}
-.f5{left:62%;top:29%}
-.f6{left:50%;top:22%}
+.f1{left:50%;top:4%}
+.f2{left:29%;top:15%}
+.f3{left:71%;top:15%}
+.f4{left:38%;top:28%}
+.f5{left:62%;top:28%}
+.f6{left:50%;top:21%;z-index:5}
+
+/* GENERATED PETALS */
+
+.flower svg{
+    width:100%;
+    height:100%;
+    overflow:visible;
+}
+
+.petal{
+    fill:#d85f6c;
+    stroke:#a94350;
+    stroke-width:1.2;
+    filter:url(#soft);
+}
+
+.petal.light{fill:#e57b83}
+.petal.dark{fill:#bd4b59}
+
+.center{
+    fill:#b94351;
+    stroke:#863542;
+    stroke-width:2;
+}
+
+.center-dot{
+    fill:#f4a1a3;
+}
+
+/* PARTICLES */
 
 .particles span{
-position:absolute;
-width:3px;
-height:3px;
-border-radius:50%;
-background:#fff8;
-animation:float 7s infinite ease-in-out
+    position:absolute;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:#fff9;
+    animation:float 7s ease-in-out infinite;
 }
 
+/* ANIMATIONS */
+
 @keyframes intro{
-to{opacity:1}
+    to{
+        opacity:1;
+        transform:translateX(-50%) translateY(0);
+    }
 }
 
 @keyframes float{
-50%{transform:translateY(-30px);opacity:.3}
+    50%{
+        transform:translateY(-30px);
+        opacity:.3;
+    }
 }
 
 @keyframes sway{
-50%{margin-left:3px}
+    50%{margin-left:3px}
 }
 
+/* PHONE */
+
 @media(max-width:600px){
-.bouquet-stage{
-transform:translateX(-50%) scale(.75);
-transform-origin:bottom
-}
+    .bouquet-stage{
+        transform:translateX(-50%) scale(.72);
+        transform-origin:bottom center;
+    }
+
+    .intro{
+        top:5%;
+    }
+
+    .intro h1{
+        font-size:24px;
+    }
 }
